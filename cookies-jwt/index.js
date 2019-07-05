@@ -8,16 +8,16 @@ const cors = require('cors')
 
 // Global variables
 const SECRET = 'shhh'
-const { PORT = 8888, NODE_ENV = 'development' } = process.env
+const { PORT = 3000, NODE_ENV = 'development' } = process.env
 
 // Middlewares
 app.use(express.json())
 app.use(cookieParser())
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3001'
     // for cookies and so on
-    credentials: true
+    // credentials: true
   })
 )
 

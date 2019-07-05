@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import './App.css'
 
 function App() {
@@ -7,15 +8,20 @@ function App() {
     flexDirection: 'column'
   }
 
-  const [form, setForm] = useState({
-    username: '',
-    password: ''
-  })
+  const [form, setForm] = useState({})
 
   const onSubmit = event => {
     event.preventDefault()
     console.log(form)
     event.target.reset()
+    axios
+      .post('http://localhost:3000/auth/login', {
+        method: 'post',
+        data: form,
+        widthCredentials: true
+      })
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
   }
 
   const onChangeHandler = e => {
@@ -40,7 +46,7 @@ function App() {
         <input
           type="password"
           onChange={onChangeHandler}
-          name="password"
+          name="pwd"
           placeholder="Your password"
         />
         <input type="submit" value="Send!" />
