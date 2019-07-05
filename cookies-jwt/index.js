@@ -6,9 +6,11 @@ const JWT = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 
+// Global variables
 const SECRET = 'shhh'
+const { PORT = 8888, NODE_ENV = 'development' } = process.env
 
-// Add middlewares
+// Middlewares
 app.use(express.json())
 app.use(cookieParser())
 app.use(
@@ -20,18 +22,22 @@ app.use(
 )
 
 app.post('/auth/login', (req, res) => {
+  // Retrieve from request.body
   const username = req.body.username
   const pwd = req.body.pwd
 
+  // Auth validatation
   if (username !== 'seba' || pwd !== 'lina') {
     res.status(400)
     throw new Error('username or password are not correct')
   }
 
+  // What I want in the token
   const payload = {
     _id: 'ASDFjcxxjsoidrasd'
   }
 
+  // Generate token with payload
   const token = JWT.sign(payload, SECRET)
 
   // name of the cookie = access_token; content of the cookie = token
@@ -64,5 +70,5 @@ app.use((err, req, res, enxt) => {
 })
 
 app.listen(3000, () => {
-  console.log('node app online')
+  console.log(`Server started on port: ${PORT}`)
 })
