@@ -2,28 +2,21 @@ const express = require('express')
 const app = express()
 const usuarios = require('./usuarios.json')
 
-// app.use(express.json())
+app.use(express.json())
 
 app.post('/auth/login', (req, res) => {
   const username = req.body.username
   const pwd = req.body.pwd
-  res.send(JSON.parse(req.body))
-  console.log(`username: ${username} and pwd: ${pwd}`)
-})
 
-const objeto = {
-  name: 'lala',
-  poto: 'caca'
-}
+  if (username !== 'seba' || pwd !== 'lina') {
+    res.status(400)
+    throw new Error('username or password are not correct')
+  }
 
-app.use('/json', (req, res) => {
-  // res.json(typeof usuarios[6])
-  res.json({ flavio: 'flavio' })
-})
+  res.cookie('access_token', { token: '123' })
+  res.send('hi')
 
-app.use('/send', (req, res) => {
-  // res.send(typeof usuarios[6])
-  res.send({ flavio: 'flavio' })
+  res.status(200).end()
 })
 
 app.listen(3000, () => {
