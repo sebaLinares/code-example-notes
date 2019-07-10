@@ -13,19 +13,46 @@ const { PORT = 3000, NODE_ENV = 'development' } = process.env
 // Middlewares
 app.use(express.json())
 app.use(cookieParser())
+// app.use(function(req, res, next) {
+//   res.header('Access-Control-Allow-Credentials', true)
+//   res.header('Access-Control-Allow-Origin', req.headers.origin)
+//   res.header(
+//     'Access-Control-Allow-Methods',
+//     'GET,PUT,POST,DELETE,UPDATE,OPTIONS'
+//   )
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
+//   )
+//   next()
+// })
+
 app.use(
   cors({
-    origin: 'http://localhost:3001'
-    // for cookies and so on
+    // origin: 'http://localhost:3006'
     // credentials: true
   })
 )
 
+app.use((req, res, next) => {
+  res.set({
+    // 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,UPDATE,OPTIONS'
+    // Accept: 'application/json'
+    // 'Content-type': 'application/json',
+    // 'Access-Control-Allow-Credentials': true,
+    // 'Access-Control-Allow-Origin': req.headers.origin,
+    // 'Access-Control-Allow-Headers':
+    //   'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
+  })
+  next()
+})
+
 app.post('/auth/login', (req, res) => {
   // Retrieve from request.body
-  const username = req.body.username
-  const pwd = req.body.pwd
+  const username = req.body.data.username
+  const pwd = req.body.data.pwd
 
+  console.log(username, pwd)
   // Auth validatation
   if (username !== 'seba' || pwd !== 'lina') {
     res.status(400)
@@ -43,15 +70,18 @@ app.post('/auth/login', (req, res) => {
   // name of the cookie = access_token; content of the cookie = token
   res.cookie('access_token', token, {
     // expiration date for the cookie, in secs
-    maxAge: 3600,
+    maxAge: 1000 * 60 * 60,
     // js can't access the cookie
-    httOnly: true
+    httpOnly: true
   })
+
+  console.log('cookie sent')
+  console.log(token)
 
   res.status(200).end()
 })
 
-app.use('/api/users/', (req, res) => {
+app.use('/api/users', (req, res) => {
   const token = req.cookies.access_token
 
   // If this fails it will throw an error
@@ -63,6 +93,10 @@ app.use('/api/users/', (req, res) => {
   }
 
   res.status(200).json(usuarios)
+})
+
+app.use('/api/hola', (req, res) => {
+  res.send('hola')
 })
 
 app.use((err, req, res, enxt) => {

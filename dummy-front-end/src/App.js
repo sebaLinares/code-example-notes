@@ -12,14 +12,42 @@ function App() {
 
   const onSubmit = event => {
     event.preventDefault()
-    console.log(form)
+    console.log(JSON.stringify(form))
     event.target.reset()
+    console.log('calling /auth/login')
     axios
       .post('http://localhost:3000/auth/login', {
-        method: 'post',
         data: form,
         widthCredentials: true
       })
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
+    // const url = 'http://localhost:3000/auth/login'
+    // const options = {
+    //   method: 'POST',
+    //   body: JSON.stringify(form),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Accept: 'application/json',
+    //     credentials: 'include'
+    //   }
+    // }
+
+    // fetch(url, options).then(data => console.log(data))
+  }
+
+  const apiCall = () => {
+    console.log('calling /api/users/')
+    axios
+      .get('http://localhost:3000/api/users')
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
+  }
+
+  const apiHola = () => {
+    console.log('calling /api/hola')
+    axios
+      .get('http://localhost:3000/api/hola')
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }
@@ -51,6 +79,8 @@ function App() {
         />
         <input type="submit" value="Send!" />
       </form>
+      <button onClick={apiCall}>api call</button>
+      <button onClick={apiHola}>Api hola</button>
     </div>
   )
 }
