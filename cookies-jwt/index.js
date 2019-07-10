@@ -34,39 +34,45 @@ app.use(
   })
 )
 
-app.use((req, res, next) => {
-  res.set({
-    // 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,UPDATE,OPTIONS'
-    // Accept: 'application/json'
-    // 'Content-type': 'application/json',
-    // 'Access-Control-Allow-Credentials': true,
-    // 'Access-Control-Allow-Origin': req.headers.origin,
-    // 'Access-Control-Allow-Headers':
-    //   'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
-  })
-  next()
-})
+// app.use((req, res, next) => {
+//   res.set({
+//     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,UPDATE,OPTIONS',
+//     Accept: 'application/json',
+//     'Content-type': 'application/json',
+//     'Access-Control-Allow-Credentials': true,
+//     'Access-Control-Allow-Origin': req.headers.origin,
+//     'Access-Control-Allow-Headers':
+//       'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
+//   })
+//   next()
+// })
 
 app.post('/auth/login', (req, res) => {
-  // Retrieve from request.body
-  const username = req.body.data.username
-  const pwd = req.body.data.pwd
+  console.log('entered /auth/login')
 
-  console.log(username, pwd)
+  // Retrieve from request.body
+  const username = req.body.username
+  const pwd = req.body.pwd
+
+  console.log('username and pwd set')
   // Auth validatation
   if (username !== 'seba' || pwd !== 'lina') {
     res.status(400)
     throw new Error('username or password are not correct')
   }
 
+  console.log('validation ok')
   // What I want in the token
   const payload = {
     _id: 'ASDFjcxxjsoidrasd'
   }
 
+  console.log('payload ok')
+
   // Generate token with payload
   const token = JWT.sign(payload, SECRET)
 
+  console.log('token ok')
   // name of the cookie = access_token; content of the cookie = token
   res.cookie('access_token', token, {
     // expiration date for the cookie, in secs
@@ -82,6 +88,7 @@ app.post('/auth/login', (req, res) => {
 })
 
 app.use('/api/users', (req, res) => {
+  console.log('/api/users')
   const token = req.cookies.access_token
 
   // If this fails it will throw an error
@@ -96,6 +103,7 @@ app.use('/api/users', (req, res) => {
 })
 
 app.use('/api/hola', (req, res) => {
+  console.log('api/hola')
   res.send('hola')
 })
 
@@ -104,5 +112,5 @@ app.use((err, req, res, enxt) => {
 })
 
 app.listen(3000, () => {
-  console.log(`Server started on port: ${PORT}`)
+  console.log(`Server started in port: ${PORT}`)
 })
