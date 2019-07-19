@@ -48,31 +48,20 @@ app.use(
 // })
 
 app.post('/auth/login', (req, res) => {
-  console.log('entered /auth/login')
-
   // Retrieve from request.body
   const username = req.body.username
   const pwd = req.body.pwd
-
-  console.log('username and pwd set')
   // Auth validatation
   if (username !== 'seba' || pwd !== 'lina') {
     res.status(400)
     throw new Error('username or password are not correct')
   }
-
-  console.log('validation ok')
   // What I want in the token
   const payload = {
     _id: 'ASDFjcxxjsoidrasd'
   }
-
-  console.log('payload ok')
-
   // Generate token with payload
   const token = JWT.sign(payload, SECRET)
-
-  console.log('token ok')
   // name of the cookie = access_token; content of the cookie = token
   res.cookie('access_token', token, {
     // expiration date for the cookie, in secs
@@ -80,10 +69,8 @@ app.post('/auth/login', (req, res) => {
     // js can't access the cookie
     httpOnly: true
   })
-
   console.log('cookie sent')
   console.log(token)
-
   res.status(200).end()
 })
 
